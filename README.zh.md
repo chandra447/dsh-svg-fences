@@ -13,10 +13,13 @@
 </p>
 
 <p align="center">
-  <img src="assets/figure-dark.png" alt="SVG 代码块在 DeepSeek Harness 回复中渲染为跟随主题的图形" width="760">
+  <img src="assets/hero.gif" alt="DeepSeek Harness 中的 SVG 代码块变成渲染后的图形" width="760">
 </p>
 
 **DeepSeek Harness 把 SVG 代码块当成代码显示。这个插件直接把图画出来。**
+
+_25 fps 动画，由 fframes 渲染。[看 1080p MP4](assets/hero.mp4)。_
+
 
 助手写了一段 SVG，DSH 给你看的是 40 行 XML。装上这个插件，你看到的是图本身，就在原来代码块的位置。想看 XML，点一下就回来了。
 

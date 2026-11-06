@@ -13,10 +13,13 @@
 </p>
 
 <p align="center">
-  <img src="assets/figure-dark.png" alt="An SVG fence rendered as a themed figure in a DeepSeek Harness reply" width="760">
+  <img src="assets/hero.gif" alt="An SVG code fence in DeepSeek Harness turning into a rendered figure" width="760">
 </p>
 
 **DeepSeek Harness shows SVG fences as code. This plugin shows them as pictures.**
+
+_A 25 fps motion piece rendered with fframes. [Watch the MP4](assets/hero.mp4) for 1080p._
+
 
 Your assistant wrote an SVG. DSH showed you 40 lines of XML. This plugin shows you the picture, right where the code block was. The XML is still one click away.
 
