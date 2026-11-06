@@ -1,7 +1,7 @@
-[English](README.md) | [中文](README.zh.md)
+[English](https://github.com/chandra447/dsh-svg-fences/blob/main/README.md) | [中文](https://github.com/chandra447/dsh-svg-fences/blob/main/README.zh.md)
 
 <p align="center">
-  <img src="assets/icon-180.png" width="90" height="90" alt="dsh-svg-fences icon">
+  <img src="https://raw.githubusercontent.com/chandra447/dsh-svg-fences/main/assets/icon-180.png" width="90" height="90" alt="dsh-svg-fences icon">
 </p>
 
 <h1 align="center">dsh-svg-fences</h1>
@@ -13,7 +13,7 @@
 </p>
 
 <p align="center">
-  <img src="assets/hero.gif" alt="An SVG code fence in DeepSeek Harness turning into a rendered figure" width="760">
+  <img src="https://raw.githubusercontent.com/chandra447/dsh-svg-fences/main/assets/hero.gif" alt="An SVG code fence in DeepSeek Harness turning into a rendered figure" width="760">
 </p>
 
 **DeepSeek Harness shows SVG fences as code. This plugin shows them as pictures.**

@@ -1,7 +1,7 @@
-[English](README.md) | [中文](README.zh.md)
+[English](https://github.com/chandra447/dsh-svg-fences/blob/main/README.md) | [中文](https://github.com/chandra447/dsh-svg-fences/blob/main/README.zh.md)
 
 <p align="center">
-  <img src="assets/icon-180.png" width="90" height="90" alt="dsh-svg-fences 图标">
+  <img src="https://raw.githubusercontent.com/chandra447/dsh-svg-fences/main/assets/icon-180.png" width="90" height="90" alt="dsh-svg-fences 图标">
 </p>
 
 <h1 align="center">dsh-svg-fences</h1>
@@ -13,7 +13,7 @@
 </p>
 
 <p align="center">
-  <img src="assets/hero.gif" alt="DeepSeek Harness 中的 SVG 代码块变成渲染后的图形" width="760">
+  <img src="https://raw.githubusercontent.com/chandra447/dsh-svg-fences/main/assets/hero.gif" alt="DeepSeek Harness 中的 SVG 代码块变成渲染后的图形" width="760">
 </p>
 
 **DeepSeek Harness 把 SVG 代码块当成代码显示。这个插件直接把图画出来。**
