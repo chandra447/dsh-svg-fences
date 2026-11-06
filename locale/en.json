@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "SVG figures",
+    "description": "Renders svg code fences in chat as theme-aware inline figures, with source, copy, download and zoom."
+  }
+}

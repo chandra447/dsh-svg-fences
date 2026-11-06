@@ -1,0 +1,4 @@
+# dsh-svg-fences bundle patch: one row, no host code. The Client half renders.
+- insert:
+    - id: svg-fences
+      name: dsh-svg-fences
