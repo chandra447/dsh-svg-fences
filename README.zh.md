@@ -1,102 +1,135 @@
-# dsh-svg-fences
-
 [English](README.md) | [中文](README.zh.md)
 
-[![npm](https://img.shields.io/npm/v/dsh-svg-fences)](https://www.npmjs.com/package/dsh-svg-fences)
-[![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
-[![ci](https://img.shields.io/github/actions/workflow/status/chandra447/dsh-svg-fences/ci.yml?label=ci)](https://github.com/chandra447/dsh-svg-fences/actions)
+<p align="center">
+  <img src="assets/icon-180.png" width="90" height="90" alt="dsh-svg-fences 图标">
+</p>
 
-![在 DeepSeek Harness 回复中渲染为图形的 SVG 代码块](assets/figure-dark.png)
+<h1 align="center">dsh-svg-fences</h1>
 
-助手写了一段 SVG，DSH 给你看了四十行 XML。
+<p align="center">
+  <a href="https://www.npmjs.com/package/dsh-svg-fences"><img src="https://img.shields.io/npm/v/dsh-svg-fences" alt="npm 版本"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT 许可证"></a>
+  <a href="https://github.com/chandra447/dsh-svg-fences/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/chandra447/dsh-svg-fences/ci.yml?label=ci" alt="CI 状态"></a>
+</p>
 
-这个插件直接把图画出来，就在对话里。跟随主题，可以切回源码，不占用任何提示词。
+<p align="center">
+  <img src="assets/figure-dark.png" alt="SVG 代码块在 DeepSeek Harness 回复中渲染为跟随主题的图形" width="760">
+</p>
 
-```
-之前                                 之后
-┌──────────────────────────┐        ┌──────────────────────────┐
-│ <svg viewBox="0 0 720…"> │        │  request → gateway → …   │
-│   <rect x="28" y="90" …> │  ───▶  │  （真正的图）             │
-│   <text x="88" …>        │        │  Source  Copy  Download  │
-│   … 还有 38 行 …          │        └──────────────────────────┘
-└──────────────────────────┘
-```
+**DeepSeek Harness 把 SVG 代码块当成代码显示。这个插件直接把图画出来。**
+
+助手写了一段 SVG，DSH 给你看的是 40 行 XML。装上这个插件，你看到的是图本身，就在原来代码块的位置。想看 XML，点一下就回来了。
 
 ## 安装
 
-在 DSH 的插件窗口里安装，或者用命令行：
+在应用里打开 **Plugins** 窗口，进入 **Discover**，搜索 `dsh-svg-fences` 并安装。
+
+用命令行的话，按你使用的 profile 选一行：
 
 ```sh
 dsh plugin --profile web add dsh-svg-fences
 dsh plugin --profile desktop add dsh-svg-fences
 ```
 
-这是预构建包。安装时不编译任何东西，所以不会弹出 `allowBuilds` 确认。如果插件没有出现，重新加载窗口即可。
+卸载时把 `add` 换成 `remove` 即可。
 
-## 你会得到
+包里自带构建好的 `client.js`。安装时不运行任何构建脚本，所以 DSH 不会弹出构建审批（`allowBuilds`）。没有 host 端代码，没有依赖，整个插件只有大约 22 KB 的浏览器 JS。
 
-- 任何内容是一份完整 `<svg>` 文档的代码块，都会在原位置渲染成图。
-- `Source` 切回源码，`Render` 再切回图形。
-- `Copy` 复制原始源码。`Download` 按 SVG 的 `<title>` 命名保存 `.svg` 文件。
-- 点击图形可以放大，有 +、− 和重置。按 Escape 或点击背景关闭。
-- 图形跟随深色和浅色主题，切换主题会立即重新编码，无需刷新。
-- 图形是一张惰性的 `data:` 图片。不执行脚本，不请求外部资源，不走网络。代码块能画图，但回不了家。
+已在 macOS 上的 DeepSeek Harness 0.2.x 中测试。包声明需要 Node 22.19 或更高版本。真正运行的部分是普通的浏览器 JS。其他平台尚未测试。
 
-## 用主题作画
+## 你会得到什么
 
-代码块里可以直接写短 token。插件会把它们解析成 DSH 当前实际使用的值。
+- **图形取代代码块。** 图形显示期间，原来的代码块会隐藏起来。
+- **一条小工具栏。** 左边是 `svg` 标签，右边是 `Source`、`Copy`、`Download`。
+- **源码与渲染随时切换。** 点 `Source` 回到代码，同一个按钮变成 `Render`，再点一下回到图形。
+- **复制**得到的是代码块原文，主题变量原样保留。
+- **下载**保存为 `.svg` 文件，文件名取自图形的 `<title>`，没有的话就叫 `figure.svg`。
+- **缩放。** 点击图形打开大图，带 `+`、`−` 和重置按钮。按 Escape 或点击背景即可关闭。
+- **跟随主题。** 颜色跟着 DSH 的亮色和暗色主题走，大图开着的时候切换主题也一样。
+- **看内容，不看标签。** 代码块标的是什么语言无所谓，只要内容是 SVG 文档，就会变成图形。
+- **工具栏文字支持中英文，** 跟随 DSH 的界面语言。中文界面下显示为“源码”“渲染”“复制”“下载”。
 
-```svg
-<svg viewBox="0 0 240 80" xmlns="http://www.w3.org/2000/svg">
-  <rect x="8" y="8" width="224" height="64" rx="10"
-        fill="var(--surface)" stroke="var(--border)"/>
-  <text x="120" y="46" text-anchor="middle"
-        fill="var(--accent)" font-family="sans-serif">cache hit</text>
-</svg>
+## 主题变量
+
+在代码块里用 CSS 变量写颜色。插件会在绘制前把每个变量换成当前主题的实际取值，主题一变就重新替换一次。
+
+| SVG 里写 | 对应的 DSH token | 常见用途 |
+| --- | --- | --- |
+| `var(--fg)` | `--dsw-alias-label-primary` | 正文、主线条 |
+| `var(--muted)` | `--dsw-alias-label-secondary` | 说明文字、次要线条 |
+| `var(--accent)` | 蓝色强调色（`--dsw-alias-link`，带后备） | 需要突出的那一处 |
+| `var(--bg)` | `--dsw-alias-bg-base` | 页面背景 |
+| `var(--surface)` | `--dsw-alias-bg-layer-1` | 方框、卡片 |
+| `var(--surface-alt)` | `--dsw-alias-bg-layer-2` | 嵌套方框、条纹 |
+| `var(--border)` | `--dsw-alias-border-l1` | 方框描边 |
+| `var(--line)` | `--dsw-alias-border-l2` | 连线、网格线 |
+| `var(--dsw-...)` | 原样读取该 token | 主题里的其他任何值 |
+
+三条小规则：
+
+- `var(--name, #888)` 在 token 不存在时使用 `#888`。没写后备值的话，就用正文颜色。
+- `currentColor` 跟随主题的正文颜色。只要你没在根 `<svg>` 上写 `color`，插件会替你补上。
+- 根元素没设 `font-family` 时，默认字体是 `sans-serif`。
+
+模型并不知道这些变量名，得你告诉它。在提示词或项目说明里加一句这样的话就有帮助：
+
+```text
+When you draw SVG, use var(--fg), var(--muted), var(--accent), var(--surface) and var(--border) for colors.
 ```
 
-| Token | 对应的 DSH 值 |
-|---|---|
-| `var(--fg)` | 主文字色 |
-| `var(--muted)` | 次文字色 |
-| `var(--accent)` | 蓝色强调色 |
-| `var(--surface)` | 一级背景 |
-| `var(--surface-alt)` | 二级背景 |
-| `var(--bg)` | 基础背景 |
-| `var(--border)` | 一级描边 |
-| `var(--line)` | 二级描边 |
+下面这个代码块在亮色和暗色主题下都会跟着变，下载下来的文件名是 `hello-figure.svg`：
 
-任何真实的 `--dsw-*` 自定义属性也可以直接用。`var(--name, 回退值)` 在 token 不存在时会使用回退值，这样同一段 SVG 复制到别的 Markdown 查看器也能看。
+````markdown
+```svg
+<svg viewBox="0 0 260 80" xmlns="http://www.w3.org/2000/svg">
+  <title>hello-figure</title>
+  <rect x="1" y="1" width="258" height="78" rx="10" fill="var(--surface)" stroke="var(--border)"/>
+  <circle cx="40" cy="40" r="14" fill="var(--accent)"/>
+  <text x="68" y="45" font-size="15" fill="var(--fg)">Rendered, not printed</text>
+</svg>
+```
+````
 
-## 和现有插件一起用
+| 暗色主题 | 亮色主题 |
+| --- | --- |
+| ![暗色主题下渲染的图形](assets/figure-dark.png) | ![同一个图形在亮色主题下](assets/figure-light.png) |
 
-它只认领 SVG 代码块，所以可以和一个 Mermaid 插件同时安装，各画各的，互不干扰。
+## 可以一起用
 
-## 老实说，它不做什么
+- **Mermaid 插件。** Mermaid 源码以 `graph`、`sequenceDiagram` 这类关键字开头，不会以 `<svg` 开头，所以本插件不会碰这些代码块。两个一起装就好。
+- **其他按语言认领代码块的插件。** 本插件只处理内容是 SVG 文档的代码块。
 
-- 代码块必须是完整的 SVG 文档。单独一个 `<rect …>` 片段仍然是代码。
-- 带行号的代码块、无效的 SVG、超过 60 KB 的源码，都会被跳过。
-- 图形里不会执行脚本。这是设计目标，也意味着交互式 SVG 不会动。
-- 图标和滤镜正常。SVG 里的外链图片不会加载，这是有意的。
+## 局限
 
-## 实现方式
+下面这些是有意不做的：
 
-1. DSH 用自己的代码块组件渲染每个代码块。代码块语言是 React 属性，不会出现在 DOM 里，所以按语言 class 判断行不通。
-2. 插件读取代码文本，用 `DOMParser` 确认根节点是 `<svg>`，然后在消息卡片上通过 `getComputedStyle` 解析 `var(--token)`。
-3. 解析后的 SVG 变成 `data:image/svg+xml` URI。图片就是一个沙箱：脚本被禁用，远程请求被拦截。
-4. `MutationObserver` 监听主题切换（`body[data-ds-dark-theme]`），用新颜色重新编码图片。
-5. 客户端 JavaScript 约 21 KB。没有宿主代码，没有依赖，不发网络请求。
+- 不执行 SVG 里的任何东西。图形是一个 `<img>`，来源是 `data:image/svg+xml`，所以脚本不会运行，链接点不了，外部图片和字体也不会加载。来路不明的代码块内容没法执行代码。
+- 不联网。没有请求，没有 CDN，也不用下载渲染器。
+- 不修改消息。图形只是叠在对话记录上的一层视图。停用插件，代码块就回来了。
+- 不渲染 Mermaid、PlantUML、Graphviz 或其他图表语言，只认 SVG。
+- 带行号的代码块会跳过。
+- 解析失败的 SVG 会跳过。你看到的还是普通代码块，方便找出哪里写错了。
+- 超过 60 KB 的源码会跳过。
+- 下载的文件会把当前主题的颜色写死。复制得到的源码则保留 `var(--...)` 变量。
+
+## 实现原理
+
+- 一个 `MutationObserver` 监听页面。页面变化后 250 ms 内，它会扫描每个 `div.md-code-block`，读取其中 `<pre>` 的文本。
+- 判定条件是文本去掉首尾空白后以 `<` 开头，并且 `DOMParser` 按 `image/svg+xml` 解析出 `<svg>` 根元素、没有 `parsererror`。DSH 把代码块的语言作为 React prop 保存，根本不会出现在 DOM 里，所以内容是唯一可靠的依据。
+- 主题变量通过对代码块本身调用 `getComputedStyle` 读取，因为 DSH 把主题变量挂在各个容器上，而不是 `:root`。每个 `var(--name)` 都换成计算后的值，根元素缺少 `xmlns`、`color`、`font-family` 时会补上。
+- 处理后的结果编码成 `data:image/svg+xml` URI，放进代码块后面的一个 `<img>`。原代码块通过一个 data 属性配合 CSS 隐藏。图片加载失败的话，代码块会恢复显示。
+- 第二个 observer 监听 `<html>` 和 `<body>` 的属性变化，DSH 就是在这里设置 `data-ds-dark-theme` 的。解析出的配色一变，所有图形都会重新编码。
+
+## 同系列插件
+
+[dsh-table-charts](https://github.com/chandra447/dsh-table-charts/blob/main/README.zh.md) 会在看起来像数据的 Markdown 表格下面画一张条形图。做法相同，也是一个预构建的 `client.js`，没有依赖，不需要服务。
 
 ## 致谢
 
-思路来自 [oh-my-pi](https://github.com/can1357/oh-my-pi) 的 figure pipeline：把 SVG 代码块从助手 Markdown 里提出来，在绘制前解析主题 token，再给结果加一个源码切换。这里是这些思路在 DSH 上的浏览器实现，代码从零写起。
+思路来自 [oh-my-pi](https://github.com/can1357/oh-my-pi) 的图形管线。它把 SVG 代码块从助手的 markdown 中提取出来，在栅格化之前解析主题 token，提供源码切换，还能把表格变成图表。本插件是把这些思路移植到 DSH 浏览器端的实现，代码从零写起，没有使用 oh-my-pi 的代码。
 
-演示动画由 [fframes](https://github.com/dmtrKovalenko/fframes) 渲染。
-
-## 同一对里的另一个
-
-[dsh-table-charts](https://github.com/chandra447/dsh-table-charts) 会在看起来像数据的 Markdown 表格下面画条形图。不需要工具调用，不需要服务。
+开头的动画用 [fframes](https://github.com/dmtrKovalenko/fframes) 渲染，这是一个基于 Rust 和 SVG 的视频渲染器。截图是插件在 DSH 样式下的真实渲染结果。
 
 ## 许可证
 
-MIT。Copyright 2026 Chandra Doredla.
+[MIT](LICENSE) © Chandra Doredla
