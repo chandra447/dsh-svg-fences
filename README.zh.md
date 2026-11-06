@@ -133,6 +133,8 @@ When you draw SVG, use var(--fg), var(--muted), var(--accent), var(--surface) an
 
 开头的动画用 [fframes](https://github.com/dmtrKovalenko/fframes) 渲染，这是一个基于 Rust 和 SVG 的视频渲染器。截图是插件在 DSH 样式下的真实渲染结果。
 
+演示里的 DeepSeek 鲸鱼图标来自 [LobeHub Icons](https://github.com/lobehub/lobe-icons)（MIT）。DeepSeek 及其标志是 DeepSeek 的商标。详见 [第三方声明](THIRD-PARTY.md)。
+
 ## 许可证
 
 [MIT](LICENSE) © Chandra Doredla

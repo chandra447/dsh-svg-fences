@@ -31,7 +31,8 @@
     "LICENSE",
     "CHANGELOG.md",
     "build.mjs",
-    "src"
+    "src",
+    "THIRD-PARTY.md"
   ],
   "scripts": {
     "build": "node build.mjs",

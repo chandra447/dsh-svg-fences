@@ -133,6 +133,8 @@ The approach comes from the figure pipeline in [oh-my-pi](https://github.com/can
 
 The hero animation was rendered with [fframes](https://github.com/dmtrKovalenko/fframes), a Rust and SVG video renderer. The stills show the plugin's real rendering with DSH's styles.
 
+The DeepSeek whale in the demo comes from [LobeHub Icons](https://github.com/lobehub/lobe-icons) (MIT). DeepSeek and its logo are trademarks of DeepSeek. See [third-party notices](THIRD-PARTY.md).
+
 ## License
 
 [MIT](LICENSE) © Chandra Doredla
