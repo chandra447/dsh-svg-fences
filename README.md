@@ -1,102 +1,135 @@
-# dsh-svg-fences
-
 [English](README.md) | [中文](README.zh.md)
 
-[![npm](https://img.shields.io/npm/v/dsh-svg-fences)](https://www.npmjs.com/package/dsh-svg-fences)
-[![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
-[![ci](https://img.shields.io/github/actions/workflow/status/chandra447/dsh-svg-fences/ci.yml?label=ci)](https://github.com/chandra447/dsh-svg-fences/actions)
+<p align="center">
+  <img src="assets/icon-180.png" width="90" height="90" alt="dsh-svg-fences icon">
+</p>
 
-![An SVG fence rendered as a themed figure inside a DeepSeek Harness reply](assets/figure-dark.png)
+<h1 align="center">dsh-svg-fences</h1>
 
-Your assistant wrote an SVG. DSH showed you forty lines of XML.
+<p align="center">
+  <a href="https://www.npmjs.com/package/dsh-svg-fences"><img src="https://img.shields.io/npm/v/dsh-svg-fences" alt="npm version"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT license"></a>
+  <a href="https://github.com/chandra447/dsh-svg-fences/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/chandra447/dsh-svg-fences/ci.yml?label=ci" alt="ci status"></a>
+</p>
 
-This plugin shows you the picture, right there in the transcript. It follows the theme, gives you the source back, and adds nothing to your prompt.
+<p align="center">
+  <img src="assets/figure-dark.png" alt="An SVG fence rendered as a themed figure in a DeepSeek Harness reply" width="760">
+</p>
 
-```
-before                              after
-┌──────────────────────────┐        ┌──────────────────────────┐
-│ <svg viewBox="0 0 720…"> │        │  request → gateway → …   │
-│   <rect x="28" y="90" …> │  ───▶  │  (the actual diagram)    │
-│   <text x="88" …>        │        │  Source  Copy  Download  │
-│   … 38 more lines …      │        └──────────────────────────┘
-└──────────────────────────┘
-```
+**DeepSeek Harness shows SVG fences as code. This plugin shows them as pictures.**
+
+Your assistant wrote an SVG. DSH showed you 40 lines of XML. This plugin shows you the picture, right where the code block was. The XML is still one click away.
 
 ## Install
 
-From the DSH Plugins window, or from a terminal:
+In the app, open the **Plugins** window, go to **Discover**, search for `dsh-svg-fences`, and install it.
+
+From a terminal, use the profile you run:
 
 ```sh
 dsh plugin --profile web add dsh-svg-fences
 dsh plugin --profile desktop add dsh-svg-fences
 ```
 
-It is a prebuilt package. Nothing compiles on install, so the `allowBuilds` prompt never appears. Restart or reload the window if the plugin does not show up.
+To uninstall, swap `add` for `remove`.
+
+The package ships a prebuilt `client.js`. Installing runs no build script, so DSH never asks you to approve one (`allowBuilds`). There is no host code and there are no dependencies. The whole thing is about 22 KB of browser JS.
+
+Tested with DeepSeek Harness 0.2.x on macOS. The package asks for Node 22.19 or newer. The part that runs is plain browser JS. Other platforms are untested.
 
 ## What you get
 
-- Any fenced block whose text is a complete `<svg>` document renders as a figure under the message, in place.
-- `Source` flips back to the code. `Render` flips forward again.
-- `Copy` copies the original source. `Download` saves a `.svg` named from the SVG's `<title>`.
-- Click the figure to zoom, with +, −, reset. Close with Escape or by clicking the background.
-- The figure follows light and dark mode without a reload. Change the theme and it re-encodes itself.
-- The rendered figure is an inert `data:` image. No scripts, no external fetches, no network. A fence can draw, it cannot call home.
+- **A figure in place of the fence.** The original code block is hidden while the figure is shown.
+- **A small toolbar.** An `svg` label, then `Source`, `Copy`, and `Download`.
+- **Source and Render.** `Source` flips back to the code. The same button, now labelled `Render`, flips back to the picture.
+- **Copy** puts the original fence text on your clipboard, tokens included.
+- **Download** saves an `.svg` file named after the figure's `<title>`, or `figure.svg` if there is none.
+- **Zoom.** Click the figure for a larger view with `+`, `−`, and reset. Close it with Escape or a click on the backdrop.
+- **Theme aware.** Colors follow DSH's light and dark themes, even if you switch while the zoom view is open.
+- **Content, not labels.** The fence language does not matter. If the text is an SVG document, it becomes a figure.
+- **Toolbar labels in English or Chinese,** following DSH's language.
 
-## Give it a theme
+## Theme tokens
 
-Fences can use short tokens. The plugin resolves them to the values DSH is using right now.
+Write colors as CSS variables inside the fence. The plugin swaps each one for the live theme value before it draws the image, and again whenever the theme changes.
 
-```svg
-<svg viewBox="0 0 240 80" xmlns="http://www.w3.org/2000/svg">
-  <rect x="8" y="8" width="224" height="64" rx="10"
-        fill="var(--surface)" stroke="var(--border)"/>
-  <text x="120" y="46" text-anchor="middle"
-        fill="var(--accent)" font-family="sans-serif">cache hit</text>
-</svg>
+| In your SVG | Reads DSH token | Typical use |
+| --- | --- | --- |
+| `var(--fg)` | `--dsw-alias-label-primary` | Text, main strokes |
+| `var(--muted)` | `--dsw-alias-label-secondary` | Captions, secondary lines |
+| `var(--accent)` | the blue accent (`--dsw-alias-link`, with fallbacks) | The one thing to look at |
+| `var(--bg)` | `--dsw-alias-bg-base` | Page background |
+| `var(--surface)` | `--dsw-alias-bg-layer-1` | Boxes and cards |
+| `var(--surface-alt)` | `--dsw-alias-bg-layer-2` | Nested boxes, stripes |
+| `var(--border)` | `--dsw-alias-border-l1` | Box outlines |
+| `var(--line)` | `--dsw-alias-border-l2` | Connectors, gridlines |
+| `var(--dsw-...)` | That token, as is | Anything else in the theme |
+
+Three small rules:
+
+- `var(--name, #888)` falls back to `#888` when the token is missing. With no fallback, the text color is used.
+- `currentColor` follows the theme text color. The plugin sets `color` on the root `<svg>` unless you already did.
+- The default font is `sans-serif` unless the root sets `font-family`.
+
+Models do not know these names unless you tell them. A line like this in your prompt or project instructions helps:
+
+```text
+When you draw SVG, use var(--fg), var(--muted), var(--accent), var(--surface) and var(--border) for colors.
 ```
 
-| Token | DSH value |
-|---|---|
-| `var(--fg)` | primary label |
-| `var(--muted)` | secondary label |
-| `var(--accent)` | the blue accent |
-| `var(--surface)` | layer 1 background |
-| `var(--surface-alt)` | layer 2 background |
-| `var(--bg)` | base background |
-| `var(--border)` | border level 1 |
-| `var(--line)` | border level 2 |
+A fence like this one follows the theme in both modes, and downloads as `hello-figure.svg`:
 
-Any real `--dsw-*` custom property works too. `var(--anything, fallback)` uses the fallback when the token is missing, which makes a fence portable to other Markdown viewers.
+````markdown
+```svg
+<svg viewBox="0 0 260 80" xmlns="http://www.w3.org/2000/svg">
+  <title>hello-figure</title>
+  <rect x="1" y="1" width="258" height="78" rx="10" fill="var(--surface)" stroke="var(--border)"/>
+  <circle cx="40" cy="40" r="14" fill="var(--accent)"/>
+  <text x="68" y="45" font-size="15" fill="var(--fg)">Rendered, not printed</text>
+</svg>
+```
+````
 
-## Works with the rest of your stack
+| Dark theme | Light theme |
+| --- | --- |
+| ![A figure rendered in the dark theme](assets/figure-dark.png) | ![The same figure in the light theme](assets/figure-light.png) |
 
-It only claims SVG fences, so it sits next to a Mermaid plugin without a fight. Your Mermaid diagrams keep rendering as Mermaid, your SVGs render as SVG, and neither plugin knows the other exists.
+## Works with
 
-## Limits, honestly
+- **Mermaid plugins.** Mermaid source starts with words like `graph` or `sequenceDiagram`, never `<svg`, so this plugin leaves those fences alone. Run both.
+- **Other fence plugins** that claim blocks by language. This one only acts on blocks whose content is an SVG document.
 
-- A fence must be a complete SVG document. A fragment like `<rect …>` is left as code.
-- Blocks with line numbers, invalid SVG, and sources over 60 KB are left alone.
-- No scripts run inside the figure. That is the point, and it means interactive SVG will not animate.
-- Icons and filters work. External images inside the SVG do not load, by design.
+## Limits
+
+What it does not do, on purpose:
+
+- It does not run anything inside the SVG. The figure is an `<img>` with a `data:image/svg+xml` source, so scripts do not run, links do not click, and external images and fonts do not load. Untrusted fence content cannot run code.
+- It does not touch the network. No fetches, no CDN, no renderer to download.
+- It does not change the message. The figure is a view over the transcript. Disable the plugin and the code blocks come back.
+- It does not render Mermaid, PlantUML, Graphviz, or any other diagram language. Only SVG.
+- It skips code blocks that show line numbers.
+- It skips SVG that does not parse. You get the normal code block, so you can see what broke.
+- It skips sources over 60 KB.
+- Download bakes the current theme's colors into the file. Copy keeps the `var(--...)` tokens.
 
 ## How it works
 
-1. DSH renders every fence through its own code block component. The fence language is a React prop and never reaches the DOM, so language-class detection is not possible.
-2. The plugin reads the code text, checks that it parses as an `<svg>` root with `DOMParser`, then resolves `var(--token)` against `getComputedStyle` on the message card.
-3. The resolved SVG becomes a `data:image/svg+xml` URI. An image is a sandbox: scripts are disabled, remote fetches are blocked.
-4. A `MutationObserver` catches the theme switch (`body[data-ds-dark-theme]`) and re-encodes the image with the new values.
-5. About 21 KB of client JavaScript. No host code, no dependencies, no network calls.
-
-## Credits
-
-The idea came from the figure pipeline in [oh-my-pi](https://github.com/can1357/oh-my-pi): lift SVG fences out of assistant Markdown, resolve theme tokens before rasterizing, and put a Source toggle on the result. This is a browser-side port of those ideas for DSH, written from scratch.
-
-The hero animation was rendered with [fframes](https://github.com/dmtrKovalenko/fframes).
+- One `MutationObserver` watches the page. Within 250 ms of a change it scans each `div.md-code-block` and reads the text of its `<pre>`.
+- A block qualifies when its trimmed text starts with `<` and `DOMParser` reads it as `image/svg+xml` with an `<svg>` root and no `parsererror`. DSH keeps the fence language as a React prop that never reaches the DOM, so the content is the only reliable signal.
+- Tokens are read with `getComputedStyle` on the code block itself, because DSH scopes theme variables to containers rather than `:root`. Each `var(--name)` becomes its computed value, and `xmlns`, `color`, and `font-family` are added to the root when missing.
+- The result is encoded as a `data:image/svg+xml` URI on an `<img>` placed after the block. A data attribute hides the original block with CSS. If the image fails to load, the block comes back.
+- A second observer watches attributes on `<html>` and `<body>`, where DSH sets `data-ds-dark-theme`. When the resolved palette changes, every figure is re-encoded.
 
 ## Also from this pair
 
-[dsh-table-charts](https://github.com/chandra447/dsh-table-charts) draws a bar chart under Markdown tables that look like data. No tool call, no server.
+[dsh-table-charts](https://github.com/chandra447/dsh-table-charts) draws a bar chart under Markdown tables that look like data. It is built the same way, as a prebuilt `client.js` with no dependencies and no server.
+
+## Credits
+
+The approach comes from the figure pipeline in [oh-my-pi](https://github.com/can1357/oh-my-pi). It lifts SVG fences out of assistant markdown, resolves theme tokens before rasterizing, offers a Source toggle, and turns tables into charts. This plugin is a browser-side port of those ideas for DSH, written from scratch. It contains no oh-my-pi code.
+
+The hero animation was rendered with [fframes](https://github.com/dmtrKovalenko/fframes), a Rust and SVG video renderer. The stills show the plugin's real rendering with DSH's styles.
 
 ## License
 
-MIT. Copyright 2026 Chandra Doredla.
+[MIT](LICENSE) © Chandra Doredla
